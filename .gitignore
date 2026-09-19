@@ -1,0 +1,12 @@
+# Backend (.NET)
+iot-dashboard-backend/bin/
+iot-dashboard-backend/obj/
+iot-dashboard-backend/.vs/
+*.user
+*.suo
+appsettings.Development.json
+
+# Frontend (Angular)
+iot-dashboard-frontend/node_modules/
+iot-dashboard-frontend/.angular/
+iot-dashboard-frontend/dist/
