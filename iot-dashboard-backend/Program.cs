@@ -23,6 +23,9 @@ builder.Services.AddCors(options =>
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddHttpClient();
+// ลงทะเบียน MqttPublishService แบบ Singleton (สร้างครั้งเดียวใช้ได้ทั้งแอป)
+builder.Services.AddSingleton<iot_dashboard_backend.Services.MqttPublishService>();
 
 var app = builder.Build();
 

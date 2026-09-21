@@ -12,7 +12,7 @@ namespace iot_dashboard_backend.Controllers
 
         public TelemetryController(IMongoClient mongoClient)
         {
-            var database = mongoClient.GetDatabase("TerahopIoTDb");
+            var database = mongoClient.GetDatabase("IndustrialIoTDb");
             _telemetryCollection = database.GetCollection<Telemetry>("Telemetries");
         }
 

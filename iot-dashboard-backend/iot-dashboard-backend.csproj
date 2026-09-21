@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <PackageReference Include="MongoDB.Driver" Version="3.11.1" />
+    <PackageReference Include="MQTTnet" Version="4.3.3.952" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="10.2.3" />
   </ItemGroup>
 

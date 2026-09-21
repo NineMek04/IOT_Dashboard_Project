@@ -1,0 +1,13 @@
+version: '3.8'
+services:
+  mosquitto:
+    image: eclipse-mosquitto:latest
+    container_name: mqtt_broker
+    ports:
+      - "1883:1883" # พอร์ตหลักสำหรับโปรโตคอล MQTT
+      - "9001:9001" # พอร์ตสำหรับ WebSockets (ตั้งเผื่อไว้ให้อนาคต)
+    volumes:
+      - ./config/mosquitto.conf:/mosquitto/config/mosquitto.conf
+      - ./data:/mosquitto/data
+      - ./log:/mosquitto/log
+    restart: unless-stopped

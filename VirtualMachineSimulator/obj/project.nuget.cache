@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "6ApDYk2TYMI=",
+  "success": true,
+  "projectFilePath": "E:\\Internship_project\\IOT-dashboard_Project\\VirtualMachineSimulator\\VirtualMachineSimulator.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\pirak\\.nuget\\packages\\mqttnet\\4.3.3.952\\mqttnet.4.3.3.952.nupkg.sha512"
+  ],
+  "logs": []
+}
