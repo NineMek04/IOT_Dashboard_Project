@@ -10,3 +10,4 @@ appsettings.Development.json
 iot-dashboard-frontend/node_modules/
 iot-dashboard-frontend/.angular/
 iot-dashboard-frontend/dist/
+iot-dashboard-backend/appsettings.json

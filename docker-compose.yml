@@ -1,0 +1,59 @@
+version: '3.8'
+
+services:
+  # 1. MongoDB Database
+  mongodb:
+    image: mongo:latest
+    container_name: iot_mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    restart: always
+
+  # 2. MQTT Broker
+  mqtt-broker:
+    image: eclipse-mosquitto:latest
+    container_name: iot_mqtt_broker
+    ports:
+      - "1883:1883"
+      - "9001:9001" # WebSockets (ถ้ามี)
+    volumes:
+      - ./mqtt-broker/mosquitto.conf:/mosquitto/config/mosquitto.conf
+      - mqtt_data:/mosquitto/data
+      - mqtt_log:/mosquitto/log
+    restart: always
+
+  # 3. .NET 8 Backend
+  backend:
+    build:
+      context: ./iot-dashboard-backend
+      dockerfile: Dockerfile
+    container_name: iot_backend
+    ports:
+      - "7133:8080" # แมพพอร์ตภายนอก 7133 เข้า 8080 ของ .NET
+    environment:
+      # เสียบ Connection String ให้ Backend ชี้ไปหา Container ชื่อ mongodb
+      - ConnectionStrings__DefaultConnection=mongodb://mongodb:27017
+      - MqttOptions__Host=mqtt-broker
+    depends_on:
+      - mongodb
+      - mqtt-broker
+    restart: always
+
+  # 4. Angular Frontend
+  frontend:
+    build:
+      context: ./iot-dashboard-frontend
+      dockerfile: Dockerfile
+    container_name: iot_frontend
+    ports:
+      - "4200:80" # รัน Angular บนพอร์ต 4200 (Nginx ข้างในรัน 80)
+    depends_on:
+      - backend
+    restart: always
+
+volumes:
+  mongo_data:
+  mqtt_data:
+  mqtt_log:
