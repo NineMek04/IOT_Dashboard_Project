@@ -1,0 +1,93 @@
+<div class="min-h-screen bg-[#0B1514] text-[#E8F6F5] flex">
+  <!-- Sidebar Navigation (Left) -->
+  <aside
+    class="w-20 border-r border-[#1E3835] flex flex-col items-center gap-6 pt-8 pb-6 shrink-0 sticky top-0 h-screen bg-[#0B1514]/95 backdrop-blur z-20 select-none"
+  >
+    <!-- Brand Logo Top -->
+    <a
+      routerLink="/stitch-ai-center"
+      title="Stitch AI Command Center"
+      class="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#162B29] to-[#1E3835] border border-[#4ED9D3]/40 flex items-center justify-center text-[#4ED9D3] shadow-[0_0_16px_rgba(78,217,211,0.25)] hover:shadow-[0_0_24px_rgba(78,217,211,0.5)] transition-all cursor-pointer group"
+    >
+      <svg class="w-6 h-6 transform group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+      </svg>
+    </a>
+
+    <!-- Divider -->
+    <div class="w-8 h-[1px] bg-[#1E3835]"></div>
+
+    <!-- Navigation Items -->
+    <nav class="flex flex-col items-center gap-6 w-full px-3">
+      <!-- 1. Overview Dashboard -->
+      <a
+        routerLink="/overview"
+        routerLinkActive="bg-[#1E3835] text-[#4ED9D3]"
+        [routerLinkActiveOptions]="{ exact: false }"
+        title="Overview Dashboard"
+        class="w-12 h-12 rounded-2xl flex items-center justify-center text-[#E8F6F5]/70 hover:text-[#4ED9D3] hover:bg-[#1E3835]/70 transition-all duration-200 cursor-pointer relative group"
+      >
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M4 5a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM14 5a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1V5zM4 15a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1v-4zM14 15a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1v-4z" />
+        </svg>
+        <span class="sr-only">Overview</span>
+      </a>
+
+      <!-- 2. Stitch AI Center (Target Page) -->
+      <a
+        routerLink="/stitch-ai-center"
+        routerLinkActive="bg-[#1E3835] text-[#4ED9D3]"
+        [routerLinkActiveOptions]="{ exact: false }"
+        title="Stitch AI Center"
+        class="w-12 h-12 rounded-2xl flex items-center justify-center text-[#E8F6F5]/70 hover:text-[#4ED9D3] hover:bg-[#1E3835]/70 transition-all duration-200 cursor-pointer relative group"
+      >
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+        </svg>
+        <span class="sr-only">Stitch AI Center</span>
+      </a>
+
+      <!-- 3. Machine Fleet -->
+      <a
+        routerLink="/machine-fleet"
+        routerLinkActive="bg-[#1E3835] text-[#4ED9D3]"
+        [routerLinkActiveOptions]="{ exact: false }"
+        title="Machine Fleet"
+        class="w-12 h-12 rounded-2xl flex items-center justify-center text-[#E8F6F5]/70 hover:text-[#4ED9D3] hover:bg-[#1E3835]/70 transition-all duration-200 cursor-pointer relative group"
+      >
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+        </svg>
+        <span class="sr-only">Machine Fleet</span>
+      </a>
+
+      <!-- 4. Work Orders -->
+      <a
+        routerLink="/work-orders"
+        routerLinkActive="bg-[#1E3835] text-[#4ED9D3]"
+        [routerLinkActiveOptions]="{ exact: false }"
+        title="Work Orders"
+        class="w-12 h-12 rounded-2xl flex items-center justify-center text-[#E8F6F5]/70 hover:text-[#4ED9D3] hover:bg-[#1E3835]/70 transition-all duration-200 cursor-pointer relative group"
+      >
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+        </svg>
+        <span class="sr-only">Work Orders</span>
+      </a>
+    </nav>
+
+    <!-- Bottom Status / User Indicator -->
+    <div class="mt-auto flex flex-col items-center gap-3">
+      <div
+        class="w-3 h-3 rounded-full bg-[#4ED9D3] shadow-[0_0_12px_rgba(78,217,211,0.8)] animate-pulse"
+        title="Telemetry Online"
+      ></div>
+      <div class="text-[10px] text-[#2BA8A2] font-mono tracking-tighter">V2.4</div>
+    </div>
+  </aside>
+
+  <!-- Main Content Area (Right) -->
+  <main class="flex-1 p-8 overflow-y-auto min-w-0">
+    <router-outlet></router-outlet>
+  </main>
+</div>

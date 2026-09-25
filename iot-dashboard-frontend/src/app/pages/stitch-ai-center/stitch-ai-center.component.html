@@ -1,0 +1,262 @@
+<!-- Main Target Page Container -->
+<div class="max-w-[1600px] mx-auto">
+  <!-- Top Feedback Banner (if action triggered) -->
+  @if (actionFeedback().message) {
+  <div class="mb-6 p-4 rounded-2xl flex items-center justify-between transition-all duration-300 border" [ngClass]="{
+        'bg-[#2BA8A2]/15 border-[#2BA8A2] text-[#4ED9D3] shadow-[0_0_24px_rgba(43,168,162,0.3)]':
+          actionFeedback().type === 'approve' || actionFeedback().type === 'run',
+        'bg-[#EF6C4A]/15 border-[#EF6C4A] text-[#EF6C4A] shadow-[0_0_24px_rgba(239,108,74,0.4)]':
+          actionFeedback().type === 'stop',
+        'bg-[#FFD23F]/15 border-[#FFD23F] text-[#FFD23F] shadow-[0_0_24px_rgba(255,210,63,0.3)]':
+          actionFeedback().type === 'override'
+      }">
+    <div class="flex items-center gap-3 font-medium text-sm">
+      <span class="flex items-center gap-2" [innerHTML]="actionFeedback().message"></span>
+    </div>
+    <button (click)="clearFeedback()"
+      class="text-xs uppercase font-mono tracking-wider opacity-70 hover:opacity-100 px-3 py-1 rounded-lg hover:bg-white/10 transition-colors">
+      Dismiss
+    </button>
+  </div>
+  }
+
+  <!-- Header Section -->
+  <header class="flex justify-between items-center mb-8">
+    <div class="flex items-center gap-3">
+      <h1 class="text-3xl font-extrabold text-[#E8F6F5] tracking-tight flex items-center gap-3">
+        <span class="material-symbols-rounded text-3xl text-[1.2em] align-middle inline-block text-[#4ED9D3]"
+          style="text-shadow: 0 0 16px rgba(78, 217, 211, 0.75);">smart_toy</span>
+        <span>Stitch AI Center</span>
+      </h1>
+      <span
+        class="hidden md:inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-bold bg-[#162B29] text-[#4ED9D3] border border-[#1E3835]">
+        <span class="w-2 h-2 rounded-full bg-[#4ED9D3] animate-ping"></span>
+        INFERENCE ENGINE LIVE
+      </span>
+      <!-- ปุ่ม Toggle Simulation -->
+      <button (click)="toggleSimulation()"
+        [ngClass]="isSimulationRunning() ? 'bg-red-600 hover:bg-red-500 shadow-[0_0_10px_rgba(220,38,38,0.7)]' : 'bg-emerald-600 hover:bg-emerald-500 shadow-[0_0_10px_rgba(5,150,105,0.7)]'"
+        class="px-4 py-2 ml-4 rounded-md text-white font-semibold text-sm transition-all duration-300 flex items-center gap-2 border border-white/10">
+        <span *ngIf="isSimulationRunning()" class="flex items-center gap-1.5">
+          <span class="material-symbols-rounded text-[1.2em] align-middle">emergency</span> Stop Data Sync
+        </span>
+        <span *ngIf="!isSimulationRunning()" class="flex items-center gap-1.5">
+          <span class="material-symbols-rounded text-[1.2em] align-middle">sensors</span> Start Telemetry Sim
+        </span>
+      </button>
+    </div>
+
+    <!-- Target Machine Selector Pill -->
+    <div class="relative">
+      <button type="button" (click)="toggleMachineDropdown()"
+        class="rounded-full border border-[#FFD23F] px-4 py-2 text-sm text-[#FFD23F] font-bold flex items-center gap-2 hover:shadow-[0_0_16px_rgba(255,210,63,0.4)] hover:bg-[#FFD23F]/10 transition-all duration-200 cursor-pointer select-none"
+        title="Change Target Machine">
+        <span class="w-2 h-2 rounded-full bg-[#FFD23F] animate-pulse"></span>
+        <span>Target: {{ selectedMachine() }}</span>
+        <svg class="w-4 h-4 transform transition-transform" [ngClass]="{ 'rotate-180': showMachineDropdown() }"
+          fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+        </svg>
+      </button>
+
+      <!-- Dropdown Menu -->
+      @if (showMachineDropdown()) {
+      <div
+        class="absolute right-0 mt-2 w-64 rounded-2xl bg-[#162B29] border border-[#1E3835] shadow-[0_8px_32px_rgba(0,0,0,0.6)] py-2 z-30 max-h-72 overflow-y-auto">
+        <div class="px-4 py-1.5 text-[10px] font-mono uppercase tracking-wider text-[#2BA8A2]">
+          Select Telemetry Node
+        </div>
+        @for (m of machineList(); track m.id) {
+        <button (click)="chooseMachine(m)"
+          class="w-full text-left px-4 py-2 text-sm text-[#E8F6F5] hover:bg-[#1E3835] hover:text-[#FFD23F] transition-colors flex items-center justify-between"
+          [class.text-[#FFD23F]]="m.id === activeMachineId()">
+          <div class="flex flex-col truncate pr-2">
+            <span class="font-medium truncate">{{ m.name }}</span>
+            @if (m.id !== m.name) {
+            <span class="text-[10px] font-mono text-[#2BA8A2]/70 truncate">{{ m.id }}</span>
+            }
+          </div>
+          @if (m.id === activeMachineId()) {
+          <span class="text-xs shrink-0">✓</span>
+          }
+        </button>
+        }
+      </div>
+      }
+    </div>
+  </header>
+
+  <!-- 12-Column Grid System -->
+  <div class="grid grid-cols-12 gap-6">
+    <!-- Left Column: Command Input Panel (col-span-4) -->
+    <div class="col-span-12 lg:col-span-4 flex flex-col justify-between">
+      <div>
+        <!-- Section Title: Quick Actions -->
+        <h2 class="text-base font-semibold text-[#FFD23F] mb-4 flex items-center gap-2">
+          <span class="material-symbols-rounded text-[1.2em] align-middle">bolt</span> Quick Actions
+        </h2>
+
+        <!-- Quick Action Buttons (3 items) -->
+        <div class="space-y-3">
+          @for (action of quickActions; track action.id) {
+          <button type="button" (click)="selectQuickAction(action)"
+            class="w-full rounded-full border-2 border-[#1E3835] text-[#E8F6F5] px-6 py-4 mb-3 text-left hover:border-[#4ED9D3] hover:text-[#4ED9D3] hover:shadow-[0_0_24px_rgba(43,168,162,0.5)] transition-all duration-200 cursor-pointer flex items-center justify-between group"
+            [ngClass]="{
+                'border-[#4ED9D3] text-[#4ED9D3] shadow-[0_0_24px_rgba(43,168,162,0.5)] bg-[#1E3835]/40':
+                  selectedActionId() === action.id
+              }">
+            <span class="font-medium text-sm tracking-wide" [innerHTML]="action.label"></span>
+            <span
+              class="text-xs opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all text-[#4ED9D3]">
+              →
+            </span>
+          </button>
+          }
+        </div>
+
+        <!-- Manual Prompt Area -->
+        <div>
+          <label for="manualQueryTextarea"
+            class="block text-xs uppercase tracking-wider text-[#2BA8A2] mt-8 mb-2 font-mono font-bold">
+            MANUAL DIAGNOSIS QUERY
+          </label>
+          <textarea id="manualQueryTextarea" rows="4" [ngModel]="manualQuery()"
+            (ngModelChange)="manualQuery.set($event)"
+            placeholder="Type custom sensor anomaly inquiry or prompt Stitch AI..."
+            class="w-full bg-[#1E3835] border border-[#1E3835] rounded-2xl text-[#E8F6F5] placeholder-[#E8F6F5]/50 p-4 min-h-[120px] focus:outline-none focus:border-[#5DADE2] focus:ring-2 focus:ring-[#5DADE2]/40 text-sm leading-relaxed transition-all resize-none shadow-inner"></textarea>
+        </div>
+      </div>
+
+      <!-- Run Diagnostics Button -->
+      <button type="button" (click)="runDiagnostics()" [disabled]="isDiagnosing()"
+        class="mt-6 w-full rounded-full py-4 bg-gradient-to-r from-[#FFD23F] to-[#B38F00] text-[#124D4A] font-extrabold text-base uppercase tracking-widest shadow-[0_0_24px_rgba(255,210,63,0.6)] hover:scale-105 transition-transform duration-200 cursor-pointer flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed select-none">
+        @if (isDiagnosing()) {
+        <svg class="animate-spin h-5 w-5 text-[#124D4A]" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+        </svg>
+        <span>EVALUATING SENSORS...</span>
+        } @else {
+        <span>RUN DIAGNOSTICS</span>
+        <span class="material-symbols-rounded text-lg text-[1.2em] align-middle">bolt</span>
+        }
+      </button>
+    </div>
+
+    <!-- Right Column: Diagnostic Card (col-span-8) -->
+    <!-- Right Column: Diagnostic Card (col-span-8) -->
+    <div
+      class="col-span-12 lg:col-span-8 bg-[#162B29] rounded-3xl border border-[#1E3835] shadow-[0_4px_24px_rgba(43,168,162,0.15)] p-8 flex flex-col justify-between relative overflow-hidden min-h-[500px]">
+      <!-- Background subtle grid glow accent -->
+      <div class="absolute -top-24 -right-24 w-96 h-96 bg-[#4ED9D3]/5 rounded-full blur-3xl pointer-events-none"></div>
+
+      @if (diagnostic()) {
+      <!-- Card Content Area (โชว์เมื่อ AI ส่งข้อมูลกลับมาแล้ว) -->
+      <div>
+        <!-- Card Header -->
+        <div class="flex justify-between items-center border-b border-[#1E3835] pb-6 mb-6">
+          <div class="flex items-center gap-3">
+            <h2 class="text-2xl font-bold text-[#E8F6F5] tracking-tight">Diagnostic Results</h2>
+            <span class="text-xs text-[#2BA8A2] font-mono hidden sm:inline">
+              [EVAL: {{ diagnostic()?.lastEvaluated }}]
+            </span>
+          </div>
+
+          <!-- Confidence Badge -->
+          <div
+            class="rounded-full bg-[#4ED9D3]/20 text-[#4ED9D3] px-4 py-1.5 font-bold text-sm flex items-center gap-2 border border-[#4ED9D3]/40 shadow-[0_0_16px_rgba(78,217,211,0.2)]">
+            <svg class="w-4 h-4 text-[#4ED9D3]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
+            </svg>
+            <span>{{ diagnostic()?.confidence }} Confidence</span>
+          </div>
+        </div>
+
+        <!-- Analysis Body (3 nested panels) -->
+        <div class="space-y-0">
+          <!-- 1. Root Cause Panel -->
+          <div class="border-l-4 border-[#EF6C4A] pl-4 mb-8">
+            <h3 class="text-xs uppercase font-bold tracking-widest text-[#EF6C4A] flex items-center gap-2">
+              <span class="material-symbols-rounded text-[1.2em] align-middle">warning</span> ROOT CAUSE ANALYSIS
+            </h3>
+            <p class="text-lg font-medium text-[#E8F6F5] mt-2 leading-relaxed">
+              {{ diagnostic()?.rootCause }}
+            </p>
+          </div>
+
+          <!-- 2. Impact Prediction Panel -->
+          <div class="bg-[#FFD23F]/10 border border-[#FFD23F]/30 rounded-xl p-4 mb-8">
+            <h3 class="text-xs uppercase font-bold text-[#FFD23F] flex items-center gap-2 tracking-wide">
+              <span class="material-symbols-rounded text-[1.2em] align-middle">bolt</span> IMPACT PREDICTION
+            </h3>
+            <p class="text-[#FFD23F] text-sm md:text-base font-normal mt-2 leading-relaxed">
+              {{ diagnostic()?.impactPrediction }}
+            </p>
+          </div>
+
+          <!-- 3. Recommendation Panel -->
+          <div class="border-l-4 border-[#5DADE2] pl-4 mb-12">
+            <h3 class="text-xs uppercase font-bold tracking-widest text-[#5DADE2] flex items-center gap-2">
+              <span class="material-symbols-rounded text-[1.2em] align-middle">lightbulb</span> STITCH AI PRESCRIPTIVE
+              ACTION
+            </h3>
+            <p class="text-base text-[#E8F6F5] mt-2 leading-relaxed">
+              {{ diagnostic()?.recommendation || diagnostic()?.prescriptiveAction }}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Executive Action Panel (Bottom row) -->
+      <div class="pt-4 border-t border-[#1E3835]/60">
+        <div class="text-[10px] tracking-widest uppercase font-mono text-[#2BA8A2] mb-3 font-semibold">
+          EXECUTIVE ACTION PANEL (FINAL DECISION)
+        </div>
+
+        <div class="flex flex-col sm:flex-row gap-4">
+          <!-- Approve -->
+          <button type="button" (click)="handleApprove()"
+            class="rounded-full flex-1 font-bold py-4 flex items-center justify-center gap-2 bg-[#2BA8A2] text-[#E8F6F5] shadow-[0_0_24px_rgba(43,168,162,0.5)] hover:brightness-110 active:scale-95 transition-all duration-200">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
+            </svg>
+            <span>Approve & Execute</span>
+          </button>
+
+          <!-- Override -->
+          <button type="button" (click)="handleOverride()"
+            class="rounded-full flex-1 font-bold py-4 flex items-center justify-center gap-2 bg-[#0B1514] border-2 border-[#1E3835] text-[#E8F6F5] hover:bg-[#1E3835] active:scale-95 transition-all duration-200">
+            <svg class="w-5 h-5 text-[#2BA8A2]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+            </svg>
+            <span>Manual Override</span>
+          </button>
+
+          <!-- Emergency Stop -->
+          <button type="button" (click)="handleEmergencyStop()"
+            class="rounded-full flex-1 font-bold py-4 flex items-center justify-center gap-2 bg-[#EF6C4A] text-white shadow-[0_0_24px_rgba(239,108,74,0.6)] hover:brightness-110 active:scale-95 transition-all duration-200">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+            <span>Emergency Stop</span>
+          </button>
+        </div>
+      </div>
+
+      } @else {
+      <!-- Empty State Area (โชว์ตอนเพิ่งโหลดหน้าเว็บ และยังไม่ได้กดวินิจฉัย) -->
+      <div
+        class="flex flex-col items-center justify-center h-full text-center space-y-4 my-auto opacity-70 hover:opacity-100 transition-opacity">
+        <span class="material-symbols-rounded !text-[120px] align-middle drop-shadow-xl animate-bounce">smart_toy</span>
+        <h3 class="text-xl font-bold text-[#E8F6F5] tracking-wide">System Ready for Diagnostics</h3>
+        <p class="text-sm text-[#2BA8A2] max-w-sm leading-relaxed">
+          Select a target machine and a quick action from the left panel, then click <br>
+          <span class="text-[#FFD23F] font-bold">RUN DIAGNOSTICS</span> to begin AI inference.
+        </p>
+      </div>
+      }
+    </div>
+  </div>
+</div>
